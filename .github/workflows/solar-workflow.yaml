@@ -6,7 +6,10 @@ on:
     branches:
       - main
       - "feat/*"
-
+env:
+  MONGO_URI: ${{ vars.MONGOOSE_URI }}
+  MONGO_USERNAME: ${{ vars.MONGOOSE_USER }}
+  MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
 jobs:
   unit-testing:
     name: Unit Testing
