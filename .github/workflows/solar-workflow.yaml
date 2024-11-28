@@ -36,3 +36,9 @@ jobs:
         with:
           name: Mocha-Test-Result
           path: test-results.xml
+      - name: Archive Coverage Result
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: Coverage-Test-Result
+          path: coverage

@@ -62,6 +62,9 @@ app.post("/planet", function (req, res) {
 app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, "/", "index.html"));
 });
+app.get("/api", async (req, res) => {
+  res.json("success", 200);
+});
 
 app.get("/os", function (req, res) {
   res.setHeader("Content-Type", "application/json");
