@@ -22,16 +22,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
+      - name: cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
       - name: Install Dependencies
         run: npm install
 
       - name: Unit Testing
+        id: unit-testing
         run: |
           npm test
           ls -al
 
       - name: Archive Test Result
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Mocha-Test-Result
@@ -46,6 +52,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - name: cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
       - name: Install Dependencies
         run: npm install
       - name: Code Coverage
