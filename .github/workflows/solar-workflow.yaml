@@ -107,5 +107,5 @@ jobs:
                 -e MONGO_PASSWORD=$MONGO_PASSWORD \
                 ${{ vars.DOCKER_USER }}/solar-system:latest
           echo "Waiting for the container to start..."
-          docker containers ls
+          docker container ls
           # docker exec solar-system-test curl http://localhost:3000/live
