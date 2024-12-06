@@ -71,19 +71,41 @@ jobs:
           path: coverage
   docker:
     name: Docker
+    needs: [unit-testing, code-coverage]
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      # - name: Set up QEMU
-      #   uses: docker/setup-qemu-action@v3
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     push: true
-      #     tags: user/app:latest
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
+          context: .
+
+      - name: Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: ${{ vars.DOCKER_USER }}/solar-system:latest
+          context: .
+
+      - name: Test Docker Image
+        run: |
+          docker images
+          docker run --name solar-system-test -d \
+                -p 3000:3000 \
+                -e MONGO_URI=$MONGO_URI \
+                -e MONGO_USERNAME=$MONGO_USERNAME \
+                -e MONGO_PASSWORD=$MONGO_PASSWORD \
+                ${{ vars.DOCKER_USER }}/solar-system:latest
+          echo "Waiting for the container to start..."
+          sleep 10
+          docker exec solar-system-test curl http://localhost:3000/live
