@@ -90,13 +90,6 @@ jobs:
           tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
           context: .
 
-      - name: Push Docker Image
-        uses: docker/build-push-action@v6
-        with:
-          push: false
-          tags: ${{ vars.DOCKER_USER }}/solar-system:latest
-          context: .
-
       - name: Test Docker Image
         run: |
           docker images
@@ -110,4 +103,11 @@ jobs:
           docker container ls
           docker exec solar-system-test echo "Waiting for the container to start..."
           docker container logs solar-system-test
-          wget http://localhost:3000
+          wget -q -O -  http://localhost:3000/live | grep "live"
+
+      - name: Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
+          context: .
