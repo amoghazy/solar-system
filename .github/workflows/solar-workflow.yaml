@@ -108,4 +108,6 @@ jobs:
                 ${{ vars.DOCKER_USER }}/solar-system:latest
           echo "Waiting for the container to start..."
           docker container ls
-          # docker exec solar-system-test curl http://localhost:3000/live
+          docker exec solar-system-test echo "Waiting for the container to start..."
+          docker container logs solar-system-test
+          curl http://localhost:3000
