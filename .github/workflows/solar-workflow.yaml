@@ -98,7 +98,7 @@ jobs:
                 -e MONGO_URI=$MONGO_URI \
                 -e MONGO_USERNAME=$MONGO_USERNAME \
                 -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                ${{ vars.DOCKER_USER }}/solar-system:latest
+                ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
           echo "Waiting for the container to start..."
           docker container ls
           docker exec solar-system-test echo "Waiting for the container to start..."
