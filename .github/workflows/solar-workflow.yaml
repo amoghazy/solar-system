@@ -29,7 +29,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
       - name: Install Dependencies
         run: npm install
-        
 
       - name: Unit Testing
         id: unit-testing
@@ -70,3 +69,21 @@ jobs:
         with:
           name: Coverage-Test-Result
           path: coverage
+  docker:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     tags: user/app:latest
