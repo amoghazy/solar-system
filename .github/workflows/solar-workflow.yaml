@@ -133,27 +133,27 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBECONFIG }}
 
-      - name: fetch k8s details
-        run: |
+      # - name: fetch k8s details
+      #   run: |
 
-          kubectl get nodes
+      #     kubectl get nodes
       # - name: save INGRESS_IP
       #   run: |
       #     INGRESS_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
       #     echo "INGRESS_IP=$INGRESS_IP" >> $GITHUB_ENV
-      # - uses: cschleiden/replace-tokens@v1
-      #   with:
-      #     tokenPrefix: "_{_"
-      #     tokenSuffix: "_}_"
-      #     files: '["kubernetes/development/*"]'
-      #   env:
-      #     NAMESPACE: ${{ vars.NAMESPACE }}
-      #     INGRESS_IP: ${{ env.INGRESS_IP }}
-      #     REPLICAS: ${{ vars.REPLICAS }}
-      #     IMAGE: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
-      # - name: check files
-      #   run: |
-      #     cat kubernetes/development/*.yaml
+      - uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: "_{_"
+          tokenSuffix: "_}_"
+          files: '["kubernetes/development/*"]'
+        env:
+          NAMESPACE: ${{ vars.NAMESPACE }}
+          INGRESS_IP: ${{ env.INGRESS_IP }}
+          REPLICAS: ${{ vars.REPLICAS }}
+          IMAGE: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
+      - name: check files
+        run: |
+          cat kubernetes/development/*.yaml
       # - name: create Mongo-secret
       #   run: |
       #     kubectl create secret generic mongo-db-creds -n ${{ vars.NAMESPACE }} \
@@ -165,4 +165,3 @@ jobs:
       # - name: apply deployment to development namespace
       #   run: |
       #     kubectl apply -f kubernetes/development -n ${{ vars.NAMESPACE }}
-      
