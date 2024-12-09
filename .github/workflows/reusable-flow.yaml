@@ -65,7 +65,7 @@ jobs:
           IMAGE: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
       - name: check files
         run: |
-          cat${{inputs.manifest-path}}*.yaml
+          cat ${{inputs.manifest-path}}*.yaml
       # - name: create Mongo-secret
       #   run: |
       #     kubectl create secret generic mongo-db-creds -n ${{ vars.NAMESPACE }} \

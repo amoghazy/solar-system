@@ -154,9 +154,7 @@ jobs:
       MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
     with:
       mongo-uri: ${{ vars.MONGOOSE_URI}}
-
       environment: production
-
       manifest-path: kubernetes/production/
   prod-integration-test:
     name: Integration-Test
@@ -166,7 +164,7 @@ jobs:
     steps:
       - name: integration-test
         env:
-          URL: ${{ needs.prod-deploy.outputs.url-ingress }}
+          URL: ${{ needs.prod-deploy.outputs.url-ingress-reusable }}
         run: |
           echo "URL: $URL"
           curl -k -s https://${URL}/live | grep "live"
