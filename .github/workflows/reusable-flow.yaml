@@ -1,10 +1,35 @@
 name: "Reusable-Flow"
 on:
   workflow_call:
+    secrets:
+      KUBECONFIG:
+        required: true
+      MONGO_PASSWORD:
+        required: true
+    inputs:
+      mongo-uri:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+        default: development
+      manifest-path:
+        required: true
+        type: string
+        default: "kubernetes/development/"
+      k8s-version:
+        required: false
+        type: string
+        default: "1.27.3"
+    outputs:
+      url-ingress-reusable:
+        description: The Ingress URL
+        value: ${{ jobs.reuse-deployment.outputs.url-ingress }}
 jobs:
   reuse-deployment:
     environment:
-      name: development
+      name: ${{ inputs.environment }}
       url: ${{ steps.url-ingress.outputs.INGRESS_URL_HOST }}
     outputs:
       url-ingress: ${{ steps.url-ingress.outputs.INGRESS_URL_HOST }}
@@ -32,7 +57,7 @@ jobs:
         with:
           tokenPrefix: "_{_"
           tokenSuffix: "_}_"
-          files: '["kubernetes/development/*"]'
+          files: '["${{inputs.manifest-path}}*"]'
         env:
           NAMESPACE: ${{ vars.NAMESPACE }}
           INGRESS_IP: ${{ env.INGRESS_IP }}
@@ -40,18 +65,18 @@ jobs:
           IMAGE: ${{ vars.DOCKER_USER }}/solar-system:${{ github.sha }}
       - name: check files
         run: |
-          cat kubernetes/development/*.yaml
+          cat${{inputs.manifest-path}}*.yaml
       # - name: create Mongo-secret
       #   run: |
       #     kubectl create secret generic mongo-db-creds -n ${{ vars.NAMESPACE }} \
-      #     --from-literal=MONGO_URI=$MONGO_URI \
+      #     --from-literal=MONGO_URI=${{inputs.mongo-uri}} \
       #      --from-literal=MONGO_USERNAME=$MONGO_USERNAME \
       #      --from-literal=MONGO_PASSWORD=$MONGO_PASSWORD \
       #      --save-config \
       #      --dry-run=client -o yaml | kubectl apply -f -
       # - name: apply deployment to development namespace
       #   run: |
-      #     kubectl apply -f kubernetes/development -n ${{ vars.NAMESPACE }}
+      #     kubectl apply -f ${{inputs.manifest-path}} -n ${{ vars.NAMESPACE }}
       # - name: set url for ingress
       #   id: url-ingress
       #   run: |
