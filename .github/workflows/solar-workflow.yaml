@@ -126,13 +126,11 @@ jobs:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
       MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
     with:
-      mongo-uri: ${{env.MONGO_URI}}
+      mongo-uri: ${{ vars.MONGOOSE_URI}}
 
       environment: development
 
       manifest-path: kubernetes/development/
-
-   
 
   dev-integration-test:
     name: Integration-Test
@@ -148,14 +146,14 @@ jobs:
           curl -k -s https://${URL}/live | grep "live"
   prod-deploy:
     if: github.ref == 'refs/heads/main'
-    name: Prod-Deploy
+
     needs: docker
     uses: .github/workflows/reusable-flow.yaml
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
       MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
-     with:
-      mongo-uri: ${{env.MONGO_URI}}
+    with:
+      mongo-uri: ${{ vars.MONGOOSE_URI}}
 
       environment: production
 
