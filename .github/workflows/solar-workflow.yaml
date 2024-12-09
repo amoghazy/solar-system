@@ -121,7 +121,7 @@ jobs:
   dev-deploy:
     if: contains(github.ref, 'feat/')
     needs: docker
-    uses: .github/workflows/reusable-flow.yaml
+    uses: ./.github/workflows/reusable-flow.yaml
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
       MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
@@ -148,7 +148,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     needs: docker
-    uses: .github/workflows/reusable-flow.yaml
+    uses: ./.github/workflows/reusable-flow.yaml
     secrets:
       KUBECONFIG: ${{ secrets.KUBECONFIG }}
       MONGO_PASSWORD: ${{ secrets.MONGOOSE_PASS }}
